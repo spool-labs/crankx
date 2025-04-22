@@ -1,0 +1,25 @@
+[package]
+name = "crankx"
+description.workspace = true
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+repository.workspace = true
+keywords.workspace = true
+
+[dependencies]
+equix.workspace = true
+sha3.workspace = true
+bytemuck.workspace = true
+num_enum.workspace = true
+solana-program = { workspace = true, optional = true }
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = ["std"]
+std = []
+solana = ["solana-program"]

@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = [ "crankx", "example" ]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+homepage = "https://tapedrive.io"
+description = "Your data, permanently recorded — uncensorable, uneditable, and here for good."
+documentation = "https://docs.rs/tape-api/latest/tape_api/"
+repository = "https://github.com/zfedoran/tape"
+readme = "./README.md"
+keywords = ["solana", "crypto", "mining"]
+
+[workspace.dependencies]
+crankx = { path = "crankx" }
+equix = "0.1.4"
+sha3 = "0.10.8"
+bytemuck = "1.14.3"
+num_enum = "0.7.2"
+solana-program = ">=2.1.0"
+solana-sdk = ">=2.1.0"

@@ -1,0 +1,19 @@
+[package]
+name = "crankx-example"
+description.workspace = true
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+repository.workspace = true
+keywords.workspace = true
+
+[dependencies]
+crankx = { workspace = true }
+solana-program = { workspace = true, optional = true }
+
+[features]
+default = ["std"]
+std = []
+solana = ["solana-program"]
