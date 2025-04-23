@@ -3,7 +3,7 @@
 ![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 [![crates.io](https://img.shields.io/crates/v/crankx.svg?style=flat)](https://crates.io/crates/crankx)
 
-CrankX is a Rust crate for proving possession of data segments using the EquiX Proof-of-Work algorithm. It was developed for TAPEDRIVE and is optimized for use on the Solana blockchain. The design is loosely based on Ore’s `drillx`, with an added data-verification.
+CrankX is a Rust crate for proving access to stored data segments using the EquiX Proof-of-Work algorithm. Developed for TAPEDRIVE and optimized for Solana, it enables miners to earn rewards by demonstrating possession of specific data. The design is loosely based on Ore’s `drillx`, with an added data-verification step.
 
 ---
 
