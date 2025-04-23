@@ -8,8 +8,8 @@ edition = "2021"
 license = "Apache-2.0"
 homepage = "https://tapedrive.io"
 description = "Your data, permanently recorded — uncensorable, uneditable, and here for good."
-documentation = "https://docs.rs/tape-api/latest/tape_api/"
-repository = "https://github.com/zfedoran/tape"
+documentation = "https://docs.rs/crankx/latest/crankx/"
+repository = "https://github.com/tapedrive-io/crankx"
 readme = "./README.md"
 keywords = ["solana", "crypto", "mining"]
 
