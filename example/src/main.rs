@@ -19,12 +19,12 @@ fn main() -> Result<(), CrankXError> {
     println!("SEGMENT_SIZE: {SEGMENT_SIZE}");
 
     let work_timer = Instant::now();
-    let (solution, nonce) = do_work(challenge, &data)?;
+    let solution = do_work(challenge, &data)?;
     let work_time = work_timer.elapsed().as_nanos();
     println!("Work done in {work_time} ns");
 
     let proof_timer = Instant::now();
-    prove_work(challenge, &data, nonce, &solution)?;
+    prove_work(challenge, &data, &solution)?;
     let proof_time = proof_timer.elapsed().as_nanos();
     println!("Proof done in {proof_time} ns");
 
@@ -36,7 +36,7 @@ fn main() -> Result<(), CrankXError> {
 fn do_work<const N: usize>(
     challenge: [u8; 32],
     data: &[u8; N],
-) -> Result<(Solution, u64), CrankXError> {
+) -> Result<Solution, CrankXError> {
     let mut memory = SolverMemory::new();
     let mut nonce : u64 = 0;
 
@@ -45,7 +45,7 @@ fn do_work<const N: usize>(
             &mut memory, &challenge, data, &nonce.to_le_bytes()) {
 
             if solution.difficulty() >= DIFFICULTY {
-                return Ok((solution, nonce));
+                return Ok(solution);
             }
         }
 
@@ -56,12 +56,10 @@ fn do_work<const N: usize>(
 fn prove_work<const N: usize>(
     challenge: [u8; 32],
     data: &[u8; N],
-    nonce: u64,
     solution: &Solution,
 ) -> Result<(), CrankXError> {
 
-    let nonce = nonce.to_le_bytes();
-    verify::<N>(&challenge, data, &nonce, &solution.d)?;
+    verify::<N>(&challenge, data, &solution.n, &solution.d)?;
 
     if solution.difficulty() < DIFFICULTY {
         return Err(CrankXError::InvalidSolution);

@@ -280,7 +280,7 @@ dependencies = [
 
 [[package]]
 name = "crankx"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "bytemuck",
  "equix",
@@ -291,7 +291,7 @@ dependencies = [
 
 [[package]]
 name = "crankx-example"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "crankx",
  "solana-program",

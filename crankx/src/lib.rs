@@ -35,6 +35,8 @@ impl std::error::Error for CrankXError {}
 pub struct Solution {
     /// Raw EquiX digest (16 bytes)
     pub d: [u8; 16],
+    /// Nonce (8 bytes)
+    pub n: [u8; 8],
     /// Final keccak(digest || nonce) hash (32 bytes)
     pub h: [u8; 32],
 }
@@ -69,6 +71,7 @@ pub fn solve<const N: usize>(
 
     Ok(Solution { 
         d: digest, 
+        n: *nonce,
         h: compute_hash(&digest, nonce)
     })
 }
@@ -98,6 +101,7 @@ pub fn solve_with_memory<const N: usize>(
 
     Ok(Solution { 
         d: digest, 
+        n: *nonce,
         h: compute_hash(&digest, nonce)
     })
 }
