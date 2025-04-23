@@ -8,6 +8,7 @@ homepage.workspace = true
 documentation.workspace = true
 repository.workspace = true
 keywords.workspace = true
+readme.workspace = true
 
 [dependencies]
 equix.workspace = true
