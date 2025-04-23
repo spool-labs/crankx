@@ -2,8 +2,7 @@ use std::time::Instant;
 
 use crankx::equix::SolverMemory;
 use crankx::{
-    solve_with_memory, 
-    verify, 
+    solve_with_memory,
     Solution, 
     CrankXError
 };
@@ -24,7 +23,7 @@ fn main() -> Result<(), CrankXError> {
     println!("Work done in {work_time} ns");
 
     let proof_timer = Instant::now();
-    prove_work(challenge, &data, &solution)?;
+    prove_work(&challenge, &data, &solution)?;
     let proof_time = proof_timer.elapsed().as_nanos();
     println!("Proof done in {proof_time} ns");
 
@@ -54,12 +53,12 @@ fn do_work<const N: usize>(
 }
 
 fn prove_work<const N: usize>(
-    challenge: [u8; 32],
+    challenge: &[u8; 32],
     data: &[u8; N],
     solution: &Solution,
 ) -> Result<(), CrankXError> {
 
-    verify::<N>(&challenge, data, &solution.n, &solution.d)?;
+    solution.is_valid(challenge, data)?;
 
     if solution.difficulty() < DIFFICULTY {
         return Err(CrankXError::InvalidSolution);

@@ -38,13 +38,55 @@ pub struct Solution {
     /// Nonce (8 bytes)
     pub n: [u8; 8],
     /// Final keccak(digest || nonce) hash (32 bytes)
-    pub h: [u8; 32],
+    h: [u8; 32],
 }
 
 impl Solution {
-    /// Number of leading zeros in `h`, indicating difficulty
+    /// Create a new solution
+    pub fn new(digest: [u8; 16], nonce: [u8; 8]) -> Self {
+        Self {
+            d: digest,
+            n: nonce,
+            h: compute_hash(&digest, &nonce),
+        }
+    }
+
+    /// Verify the solution against the raw `challenge || data || nonce`
+    pub fn is_valid<const N: usize>(
+        &self,
+        challenge: &[u8; 32],
+        data: &[u8; N],
+    ) -> Result<(), CrankXError> {
+        verify(challenge, data, &self.n, &self.d)
+    }
+
+    /// Final keccak(digest || nonce) hash (32 bytes)
+    pub fn to_hash(&self) -> [u8; 32] {
+        self.h
+    }
+
+    /// Compute the difficulty of the solution
     pub fn difficulty(&self) -> u32 {
         difficulty(self.h)
+    }
+
+    /// Serialize the solution to a byte array
+    pub fn to_bytes(&self) -> [u8; 24] {
+        let mut bytes = [0; 24];
+        bytes[..16].copy_from_slice(&self.d);
+        bytes[16..].copy_from_slice(&self.n);
+        bytes
+    }
+
+    /// Deserialize a byte array into a solution
+    pub fn from_bytes(bytes: &[u8; 24]) -> Self {
+        let mut d = [0; 16];
+        let mut n = [0; 8];
+
+        d.copy_from_slice(&bytes[..16]);
+        n.copy_from_slice(&bytes[16..]);
+
+        Self::new(d, n)
     }
 }
 
@@ -69,11 +111,7 @@ pub fn solve<const N: usize>(
 
     let digest = unsafe { solutions.get_unchecked(0) }.to_bytes();
 
-    Ok(Solution { 
-        d: digest, 
-        n: *nonce,
-        h: compute_hash(&digest, nonce)
-    })
+    Ok(Solution::new(digest, *nonce))
 }
 
 /// Solve PoW with pre‑allocated memory (for on‑chain performance)
@@ -99,11 +137,7 @@ pub fn solve_with_memory<const N: usize>(
 
     let digest = unsafe { solutions.get_unchecked(0) }.to_bytes();
 
-    Ok(Solution { 
-        d: digest, 
-        n: *nonce,
-        h: compute_hash(&digest, nonce)
-    })
+    Ok(Solution::new(digest, *nonce))
 }
 
 /// Verify a candidate digest against raw `challenge || data || nonce`
@@ -124,7 +158,7 @@ pub fn verify<const N: usize>(
 }
 
 /// Count leading zeros in a 32‑byte hash
-pub fn difficulty(hash: [u8; 32]) -> u32 {
+fn difficulty(hash: [u8; 32]) -> u32 {
     let mut count = 0;
     for &b in &hash {
         let lz = b.leading_zeros();
@@ -139,7 +173,7 @@ pub fn difficulty(hash: [u8; 32]) -> u32 {
 /// Build the seed: `challenge || data || nonce`
 /// Includes full raw data to prove possession; no pre‑hash needed.
 #[inline(always)]
-pub fn build_seed<const N: usize>(
+fn build_seed<const N: usize>(
     challenge: &[u8; 32],
     data: &[u8; N],
     nonce: &[u8; 8],
@@ -153,7 +187,7 @@ pub fn build_seed<const N: usize>(
 
 /// Sort 16‑byte digest as u16 words to prevent malleability
 #[inline(always)]
-pub fn to_canonical(digest: &mut [u8; 16]) {
+fn to_canonical(digest: &mut [u8; 16]) {
     unsafe {
         let words: &mut [u16; 8] = core::mem::transmute(digest);
         words.sort_unstable();
@@ -162,7 +196,7 @@ pub fn to_canonical(digest: &mut [u8; 16]) {
 
 /// Compute the final 32‑byte Keccak hash of the canonical digest and nonce
 #[inline(always)]
-pub fn compute_hash(digest: &[u8; 16], nonce: &[u8; 8]) -> [u8; 32] {
+fn compute_hash(digest: &[u8; 16], nonce: &[u8; 8]) -> [u8; 32] {
     let mut d = *digest;
     to_canonical(&mut d);
 
