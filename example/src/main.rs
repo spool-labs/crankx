@@ -7,7 +7,7 @@ use crankx::{
     CrankXError
 };
 
-const SEGMENT_SIZE: usize = 850; // bytes
+const SEGMENT_SIZE: usize = 128; // bytes
 const DIFFICULTY: u32 = 8; // leading zero bits
 
 fn main() -> Result<(), CrankXError> {
