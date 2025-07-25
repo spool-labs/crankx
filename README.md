@@ -7,17 +7,7 @@ CrankX is a Rust crate for proving access to stored data segments using the Equi
 
 ---
 
-## ✨ Features
-
-- EquiX PoW for tape segment data
-- Proves raw data possession
-- Malleability-resistant digest sorting
-- Solana-optimized with Keccak hashing
-- Pre-allocated memory for performance
-
----
-
-## 🚀 Quick Start
+## Quick Start
 
 Solve challenge,
 
@@ -59,7 +49,7 @@ Returns `Ok()` or `Err(CrankXError)`.
 
 ---
 
-## 🙌 Contributing
+## Contributing
 
 Contributions are welcome! Please open issues or PRs on the GitHub repo.
 
